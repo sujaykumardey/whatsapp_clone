@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 
 const chatdetail=new mongoose.Schema({
-    message:String,
-    createdAt:Date,
-    username:String,    
+    phone:String,
+    sender:String,  
+    text:String,  
+    timestamp:String,
 })
 
 const Chat = mongoose.model('Chat', chatdetail);
