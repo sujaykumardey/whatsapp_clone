@@ -3,12 +3,12 @@ const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
-const { url } = require('./config/key');
 const app = express();
 const server = http.createServer(app);
 const client = socketio(server);
 const _ = require('lodash');
 const bodyParser = require('body-parser');
+const { url } = require('./config/key');
 
 const { Users, Chat } = require('./modals/modals');
 
@@ -52,7 +52,6 @@ client.on('connection', (socket) => {
   app.get('/api/chat/:id', async (req, res) => {
     try {
       const user = await Users.findOne({ _id: req.params.id });
-      console.log(user);
       return res.json(user.chats);
     } catch (errror) {
       res.status(500).send('something failed');
@@ -66,12 +65,17 @@ client.on('connection', (socket) => {
       _.pick(data, ['phone', 'sender', 'text', 'timestamp'])
     );
     users.chats.push(user);
-    users.save();
+    await users.save();
     client.emit('userchat', users.chats);
   });
+
   app.get('/api/users', () => {
-    Users.find().then((obj) => {
-      client.emit('userdata', obj);
-    });
+    Users.find()
+      .then((obj) => {
+        client.emit('userdata', obj);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 });
