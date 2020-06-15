@@ -14,15 +14,18 @@ const user = new mongoose.Schema({
     type: String,
     
    },
-  country: {
-    type: String,
-    },
   phone: {
     type: String,
     required: true,
     minlength: 10,
     maxlength: 10,
     unique:true
+  },
+  password:{
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 1024,
   },
 chats:[chatdetail],
 
