@@ -41,8 +41,7 @@ router.post('/signin', async (req, res) => {
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
     res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
-  } catch (error) {
-    console.log(error);
+  } catch (error) {    
     res.status(500).send('something failed');
   }
 });
@@ -73,14 +72,12 @@ router.post('/registration', async (req, res) => {
       username: users.username + ' successfully register please Signin',
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send('something failed');
   }
 });
 
 router.get('/chat/:id', auth, async (req, res) => {
   try {
-    console.log('hello');
     const user = await Users.findOne({ _id: req.params.id });
     return res.json(user.chats);
   } catch (errror) {
