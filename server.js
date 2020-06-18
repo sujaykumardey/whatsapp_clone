@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const { url } = require('./config/key');
 
 
-
+app.use('/upload',express.static('upload'))
 app.use(bodyParser.json());
 app.use(cors());
 

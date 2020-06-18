@@ -8,6 +8,20 @@ const { Users, Chat } = require('../modals/modals');
 const { client } = require('../server');
 const { jwtkey } = require('../config/key');
 const { validateUser, validateUserSign } = require('../modals/validate');
+const multer = require('multer');
+
+
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './upload/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
 
 client.on('connection', (socket) => {
   console.log('client is connected');
@@ -41,7 +55,7 @@ router.post('/signin', async (req, res) => {
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
     res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
-  } catch (error) {    
+  } catch (error) {
     res.status(500).send('something failed');
   }
 });
@@ -94,6 +108,27 @@ router.get('/users', auth, (req, res) => {
       console.log(error);
     });
 });
+
+router.post(
+  '/fileupload',
+  upload.single('uploadImage'),
+  async (req, res, next) => {
+    try {
+    console.log(req.file, 'file upload');
+    const users = await Users.findOne({ _id: req.body.id });
+    if (!users) return res.send("user doesn't exsit");
+    const user = new Chat(_.pick(req.body, ['phone', 'sender', 'timestamp']));
+    user.url = 'http://localhost:4000/' + req.file.path;
+    console.log(user);
+    users.chats.push(user);
+    await users.save();
+    client.emit('userchat', users.chats);
+  } catch (errror) {
+    res.status(500).send('something failed');
+  }
+  }
+);
+
 sendsUserData = (obj) => {
   client.emit('userdata', obj);
 };

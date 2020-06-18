@@ -6,13 +6,13 @@ const chatdetail=new mongoose.Schema({
     sender:String,  
     text:String,  
     timestamp:String,
+    url:String,
 })
 
 const Chat = mongoose.model('Chat', chatdetail);
 const user = new mongoose.Schema({
   username: {
-    type: String,
-    
+    type: String,    
    },
   phone: {
     type: String,
