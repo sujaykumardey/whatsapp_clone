@@ -24,7 +24,7 @@ var upload = multer({ storage: storage });
 client.on('connection', (socket) => {
   console.log('client is connected');
   socket.on('chats', async (data) => {
-   
+    try{
     const users = await Users.findOne({ _id: data.id });
     if (!users) return res.send("user doesn't exsit");
     const user = new Chat(
@@ -33,6 +33,10 @@ client.on('connection', (socket) => {
     users.chats.push(user);
     await users.save();
     client.emit('userchat', users.chats);
+    }catch(error){
+      
+      res.status(500).send('something failed')
+    }
   });
 });
 
@@ -53,6 +57,7 @@ router.post('/signin', async (req, res) => {
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
     res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
+  
   } catch (error) {
     res.status(500).send('something failed');
   }
