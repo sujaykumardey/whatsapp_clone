@@ -42,6 +42,7 @@ client.on('connection', (socket) => {
 
 router.post('/signin', async (req, res) => {
   try {
+    res.json(req.body);
     const { error } = validateUserSign(req.body);
     if (error)
       return res.json({ success: false, username: 'Invalid user input' });
