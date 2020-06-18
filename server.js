@@ -9,10 +9,10 @@ exports.client = socketio(server);
 const bodyParser = require('body-parser');
 const { url } = require('./config/key');
 
-
-app.use('/upload',express.static('upload'))
-app.use(bodyParser.json());
+app.use('/upload', express.static('upload'));
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const port = process.env.PORT || 4000;
 
@@ -31,12 +31,8 @@ mongoose.connect(process.env.MONGODB_URI || url, {
 mongoose.connection.on('connected', () => {
   console.log('mongoose is connect..');
 });
- 
-app
-  .get('/', (req,res) => {
-    res.json('Welcome you to whatsapp clone');
-  });
-app.use('/api', routers);
 
-  
-    
+app.get('/', (req, res) => {
+  res.json('Welcome you to whatsapp clone');
+});
+app.use('/api', routers);
