@@ -24,7 +24,7 @@ var upload = multer({ storage: storage });
 client.on('connection', (socket) => {
   console.log('client is connected');
   socket.on('chats', async (data) => {
-    console.log('hello', data);
+   
     const users = await Users.findOne({ _id: data.id });
     if (!users) return res.send("user doesn't exsit");
     const user = new Chat(
@@ -112,12 +112,11 @@ router.post(
   upload.single('uploadImage'),
   async (req, res, next) => {
     try {
-      console.log(req.file, 'file upload');
       const users = await Users.findOne({ _id: req.body.id });
       if (!users) return res.send("user doesn't exsit");
       const user = new Chat(_.pick(req.body, ['phone', 'sender', 'timestamp']));
-      user.url = 'http://localhost:4000/' + req.file.path;
-      console.log(user);
+      user.url = `http://localhost:${process.env.PORT}/` + req.file.path;
+      
       users.chats.push(user);
       await users.save();
       client.emit('userchat', users.chats);
