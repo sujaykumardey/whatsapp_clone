@@ -33,8 +33,8 @@ mongoose.connection.on('connected', () => {
 });
  
 app
-  .get('/', () => {
-    res.send('Welcome you to whatsapp clone');
+  .get('/', (req,res) => {
+    res.json('Welcome you to whatsapp clone');
   });
 app.use('/api', routers);
 
