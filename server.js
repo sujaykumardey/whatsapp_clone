@@ -12,13 +12,7 @@ const { url } = require('./config/key');
 
 app.use('/upload',express.static('upload'))
 app.use(bodyParser.json());
-app.use((req,res,next)=>{
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
-  res.header('Access-Control-Allow-Headers', 'Content-Type'); // If needed
-  next();
-})
-
+app.use(cors());
 
 const port = process.env.PORT || 4000;
 
