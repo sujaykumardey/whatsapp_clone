@@ -17,7 +17,7 @@ function validateUserSign(user) {
       password: Joi.string().min(5).max(255).required(),
     };
     
-    return ccuser;
+    return user;
   }
 
 
