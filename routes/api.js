@@ -46,7 +46,7 @@ router.post('/signin', async (req, res) => {
     const { error } = validateUserSign(req.body);
     if (error)
           
-      return res.json(error);
+      return res.json("hello raj here");
     const user = await Users.findOne({ phone: req.body.phone });
     if (!user)
       return res.json({ success: false, username: "User Doesn't Exist" });
