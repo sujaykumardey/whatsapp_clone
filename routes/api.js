@@ -42,11 +42,11 @@ client.on('connection', (socket) => {
 
 router.post('/signin', async (req, res) => {
   try {
-    return res.json(req.body);
+   
     const { error } = validateUserSign(req.body);
     if (error)
           
-      return res.json({ success: false, username: 'Invalid user input' });
+      return res.json(error);
     const user = await Users.findOne({ phone: req.body.phone });
     if (!user)
       return res.json({ success: false, username: "User Doesn't Exist" });
