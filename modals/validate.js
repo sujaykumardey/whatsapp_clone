@@ -11,12 +11,13 @@ function validateUser(user) {
 }
 
 function validateUserSign(user) {
+    
     const Schema = {
       phone: Joi.number().min(10).required(),
       password: Joi.string().min(5).max(255).required(),
     };
     
-    return Joi.validate(user, Schema);
+    return return user;
   }
 
 
