@@ -41,14 +41,16 @@ client.on('connection', (socket) => {
 });
 
 router.post('/signin', async (req, res) => {
-  try {   
-    const data=req.body;
+  try {
+   const data=req.body;
     const { error } = validateUserSign(data);
-    return res.json(error);
+    if (error) return res.json(error);
     const user = await Users.findOne({ phone: req.body.phone });
-    if (!user) return res.json({ success: false, username: "User Doesn't Exist" });
+    if (!user)
+      return res.json({ success: false, username: "User Doesn't Exist" });
     const validpassword = bcrypt.compare(req.body.password, user.password);
-    if (!validpassword) return res.json({
+    if (!validpassword)
+      return res.json({
         success: false,
         username: 'User password is incorrect',
       });
