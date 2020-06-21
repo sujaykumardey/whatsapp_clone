@@ -8,7 +8,7 @@ const server = http.createServer(app);
 exports.client = socketio(server);
 const bodyParser = require('body-parser');
 const { url } = require('./config/key');
-require('dotenv').config();
+
 
 app.use('/upload', express.static('upload'));
 app.use(cors());
