@@ -41,24 +41,19 @@ client.on('connection', (socket) => {
 });
 
 router.post('/signin', async (req, res) => {
-  try {
-   
+  try {   
     const { error } = validateUserSign(req.body);
-    if (error)
-          
-      return res.json("hello raj here");
+    if (error) return res.json("hello raj here");
     const user = await Users.findOne({ phone: req.body.phone });
-    if (!user)
-      return res.json({ success: false, username: "User Doesn't Exist" });
+    if (!user) return res.json({ success: false, username: "User Doesn't Exist" });
     const validpassword = bcrypt.compare(req.body.password, user.password);
-    if (!validpassword)
-      return res.json({
+    if (!validpassword) return res.json({
         success: false,
         username: 'User password is incorrect',
       });
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
-    res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
+    return res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
   
   } catch (error) {
     res.status(500).send('something failed');
