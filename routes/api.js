@@ -44,16 +44,13 @@ router.post('/signin', async (req, res) => {
   try {
     const data=req.body;
     const { error } = validateUserSign(data);
-    if (error) return res.json(error);
+    if (error) return res.status(400).send('invalid phone number and password');
     const user = await Users.findOne({ phone: req.body.phone });
     if (!user)
-      return res.json({ success: false, username: "User Doesn't Exist" });
+      return res.send("user doesn't exsit");
     const validpassword = bcrypt.compare(req.body.password, user.password);
     if (!validpassword)
-      return res.json({
-        success: false,
-        username: 'User password is incorrect',
-      });
+    return res.status(400).send('invalid password');
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
     return res.json(_.pick(user, ['_id', 'username', 'phone', 'token']));
