@@ -120,7 +120,7 @@ router.post(
       const users = await Users.findOne({ _id: req.body.id });
       if (!users) return res.send("user doesn't exsit");
       const user = new Chat(_.pick(req.body, ['phone', 'sender', 'timestamp']));
-      user.url = `http://localhost:${process.env.PORT}/` + req.file.path;
+      user.url = `https://whatsapp-clonedemo.herokuapp.com/` + req.file.path;
       
       users.chats.push(user);
       await users.save();
