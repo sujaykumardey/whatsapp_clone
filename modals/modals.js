@@ -1,37 +1,38 @@
 const mongoose = require('mongoose');
 
-
-const chatdetail=new mongoose.Schema({
-    phone:String,
-    sender:String,  
-    text:String,  
-    timestamp:String,
-    url:String,
-})
+const chatdetail = new mongoose.Schema({
+  phone: String,
+  sender: String,
+  text: String,
+  timestamp: String,
+  url: String,
+});
 
 const Chat = mongoose.model('Chat', chatdetail);
 const user = new mongoose.Schema({
   username: {
-    type: String,    
-   },
+    type: String,
+  },
   phone: {
     type: String,
     required: true,
     minlength: 10,
     maxlength: 10,
-    unique:true
+    unique: true,
   },
-  password:{
+  password: {
     type: String,
     required: true,
     minlength: 5,
     maxlength: 1024,
   },
-chats:[chatdetail],
-
+  url: {
+    type: String,
+  },
+  chats: [chatdetail],
 });
 
 const Users = mongoose.model('users', user);
 
-exports.Users= Users;
-exports.Chat= Chat;
+exports.Users = Users;
+exports.Chat = Chat;

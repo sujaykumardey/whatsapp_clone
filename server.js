@@ -3,17 +3,22 @@ const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
+const EventEmitter = require('events');
+
+class MyEmitter extends EventEmitter {}
+
+const myEmitter = new MyEmitter();
+myEmitter.setMaxListeners(11);
+
 const app = express();
 const server = http.createServer(app);
 exports.client = socketio(server);
 const bodyParser = require('body-parser');
 const { url } = require('./config/key');
 
-
 app.use('/upload', express.static('upload'));
-app.use(cors());
-
 app.use(bodyParser.json());
+app.use(cors());
 
 const port = process.env.PORT || 4000;
 
@@ -33,7 +38,8 @@ mongoose.connection.on('connected', () => {
   console.log('mongoose is connect..');
 });
 
-app.get('/', (req, res) => {
-  res.json('Welcome you to whatsapp clone');
-});
-app.use('/api', routers);
+app
+  .get('/', () => {
+    res.send('Welcome you to whatsapp clone');
+  })
+  .use('/api', routers);
