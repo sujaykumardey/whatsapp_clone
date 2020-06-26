@@ -58,20 +58,15 @@ client.on('connection', (socket) => {
 router.post('/signin', async (req, res) => {
   try {
     const { error } = validateUserSign(req.body);
-    if (error)
-      return res.json({ success: false, username: 'Invalid user input' });
+    if (error) return res.status(400).send('invalid user');
     const user = await Users.findOne({ phone: req.body.phone });
     if (!user)
       return res.json({ success: false, username: "User Doesn't Exist" });
     const validpassword = bcrypt.compare(req.body.password, user.password);
-    if (!validpassword)
-      return res.json({
-        success: false,
-        username: 'User password is incorrect',
-      });
+    if (!validpassword) return res.status(400).send('invalid password');
     const token = jwt.sign({ _id: user._id }, jwtkey);
     user.token = token;
-    res.json(_.pick(user, ['_id', 'username', 'phone', 'token','url']));
+    res.json(_.pick(user, ['_id', 'username', 'phone', 'token', 'url']));
   } catch (error) {
     res.status(500).send('something failed');
   }
@@ -151,7 +146,7 @@ router.post(
   uploads3.single('uploadImage'),
   async (req, res, next) => {
     try {
-       const users = await Users.findOne({ _id: req.body.id });
+      const users = await Users.findOne({ _id: req.body.id });
       if (!users) return res.send("user doesn't exsit");
       const user = new Chat(_.pick(req.body, ['phone', 'sender', 'timestamp']));
       user.url = `${req.file.location}`;
@@ -173,9 +168,12 @@ router.post(
       const users = await Users.findOne({ _id: req.body.id });
       if (!users) return res.send("user doesn't exsit");
       users.url = `${req.file.location}`;
-     
+
       await users.save();
-      client.emit('profile', _.pick(users, ['_id','username','phone','chats','url']));
+      client.emit(
+        'profile',
+        _.pick(users, ['_id', 'username', 'phone', 'chats', 'url'])
+      );
     } catch (error) {
       console.log(error);
       res.status(500).send('something failed');
