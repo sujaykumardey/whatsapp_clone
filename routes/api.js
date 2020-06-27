@@ -182,7 +182,10 @@ router.post(
 );
 
 sendsUserData = (obj) => {
-  client.emit('userdata', obj);
+  const users=obj.map(user=>{
+    return _.pick(user, ['_id', 'username', 'phone', 'url'])
+  })
+  client.emit('userdata', users);
 };
 
 module.exports = router;
