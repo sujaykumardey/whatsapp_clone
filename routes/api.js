@@ -172,7 +172,7 @@ router.post(
       await users.save();
       client.emit(
         'profile',
-        _.pick(users, ['_id', 'username', 'phone', 'chats', 'url'])
+        _.pick(users, ['_id', 'username', 'phone', 'url'])
       );
     } catch (error) {
       console.log(error);
